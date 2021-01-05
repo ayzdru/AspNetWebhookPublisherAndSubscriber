@@ -5,19 +5,15 @@ using System.Threading.Tasks;
 
 namespace AspNetWebhookPublisher.Entities
 {
-    public class WebhookSubscription
+    public class WebhookSubscription : BaseEntity
     {
-        public string WebhookUri { get; set; }
+        public Guid WebhookSubscriptionContentTypeId { get; set; }
+        public WebhookSubscriptionContentType WebhookSubscriptionContentType { get; set; }
+        public Guid WebhookSubscriptionTypeId { get; set; }
+        public WebhookSubscriptionType WebhookSubscriptionType { get; set; }       
+        public string PayloadUrl { get; set; }
         public string Secret { get; set; }
         public bool IsActive { get; set; }
-        public List<string> Webhooks { get; set; }
-        public IDictionary<string, string> Headers { get; set; }
-
-        public WebhookSubscription()
-        {
-            IsActive = true;
-            Headers = new Dictionary<string, string>();
-            Webhooks = new List<string>();
-        }
+        public ICollection<WebhookSubscriptionAllowedEvent> WebhookSubscriptionAllowedEvents { get; set; }
     }
 }

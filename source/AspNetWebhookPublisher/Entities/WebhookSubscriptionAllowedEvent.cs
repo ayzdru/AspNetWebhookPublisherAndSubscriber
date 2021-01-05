@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace AspNetWebhookPublisher.Entities
 {
-    public class WebhookPayload : BaseEntity
+    public class WebhookSubscriptionAllowedEvent : BaseEntity
     {
+        public Guid WebhookSubscriptionId { get; set; }
+        public WebhookSubscription WebhookSubscription { get; set; }
         public Guid WebhookEventId { get; set; }
         public WebhookEvent WebhookEvent { get; set; }
-        public int Attempt { get; set; }
-        public string Data { get; set; }
     }
 }
