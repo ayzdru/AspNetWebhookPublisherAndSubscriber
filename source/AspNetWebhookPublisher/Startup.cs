@@ -1,4 +1,6 @@
 using AspNetWebhookPublisher.Data;
+using AspNetWebhookPublisher.Interfaces;
+using AspNetWebhookPublisher.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace AspNetWebhookPublisher
@@ -24,7 +27,7 @@ namespace AspNetWebhookPublisher
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+       
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -34,7 +37,8 @@ namespace AspNetWebhookPublisher
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
-            services.AddHttpClient();
+            services.AddHttpClient<IWebhookPublisher, WebhookPublisher>(q => q.Timeout = TimeSpan.FromSeconds(5));
+            services.AddScoped<IWebhookPublisher, WebhookPublisher>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

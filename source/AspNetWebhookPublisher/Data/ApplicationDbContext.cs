@@ -16,6 +16,7 @@ namespace AspNetWebhookPublisher.Data
         public DbSet<WebhookSubscriptionContentType> WebhookSubscriptionContentTypes { get; set; }
         public DbSet<WebhookSubscriptionType> WebhookSubscriptionTypes { get; set; }
         public DbSet<WebhookSubscription> WebhookSubscriptions { get; set; }
+        public DbSet<Person> Persons { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -42,8 +43,8 @@ namespace AspNetWebhookPublisher.Data
                  webhookSubscriptionType2
                 );
             builder.Entity<WebhookSubscription>().HasData(
-                new WebhookSubscription() {  Id = Guid.NewGuid(), PayloadUrl= "http://localhost:5040/webhook-form-data-test", Secret = "secret", WebhookSubscriptionContentTypeId = webhookSubscriptionContentType1.Id, WebhookSubscriptionTypeId = webhookSubscriptionType1.Id, Created = DateTime.Now, IsActive = true },
-                 new WebhookSubscription() { Id = Guid.NewGuid(), PayloadUrl = "http://localhost:5040/webhook-json-data-test", Secret = "secret", WebhookSubscriptionContentTypeId = webhookSubscriptionContentType2.Id, WebhookSubscriptionTypeId = webhookSubscriptionType1.Id, Created = DateTime.Now, IsActive = true }
+                new WebhookSubscription() {  Id = Guid.NewGuid(), PayloadUrl= "http://localhost:5040/webhook-json-data-test", Secret = "secret", WebhookSubscriptionContentTypeId = webhookSubscriptionContentType1.Id, WebhookSubscriptionTypeId = webhookSubscriptionType1.Id, Created = DateTime.Now, IsActive = true },
+                 new WebhookSubscription() { Id = Guid.NewGuid(), PayloadUrl = "http://localhost:5040/webhook-form-data-test", Secret = "secret", WebhookSubscriptionContentTypeId = webhookSubscriptionContentType2.Id, WebhookSubscriptionTypeId = webhookSubscriptionType1.Id, Created = DateTime.Now, IsActive = true }
                 );
 
             

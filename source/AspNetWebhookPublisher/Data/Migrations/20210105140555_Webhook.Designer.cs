@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspNetWebhookPublisher.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210105132832_Webhook")]
+    [Migration("20210105140555_Webhook")]
     partial class Webhook
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,26 @@ namespace AspNetWebhookPublisher.Data.Migrations
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
+
+            modelBuilder.Entity("AspNetWebhookPublisher.Entities.Person", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Persons");
+                });
 
             modelBuilder.Entity("AspNetWebhookPublisher.Entities.WebhookEvent", b =>
                 {
@@ -46,24 +66,24 @@ namespace AspNetWebhookPublisher.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d2207623-81c1-4964-ab7a-0d47d1f0b1c6"),
-                            Created = new DateTime(2021, 1, 5, 16, 28, 32, 41, DateTimeKind.Local).AddTicks(6621),
+                            Id = new Guid("3c358c09-d38b-4e8c-86b5-8597fee1a7e0"),
+                            Created = new DateTime(2021, 1, 5, 17, 5, 54, 640, DateTimeKind.Local).AddTicks(2480),
                             Description = "Triggered when personel is created.",
                             DisplayName = "Person Created",
                             Name = "person.created"
                         },
                         new
                         {
-                            Id = new Guid("6fdc0abb-847d-4ebd-b4b1-7ec6cbf07fe5"),
-                            Created = new DateTime(2021, 1, 5, 16, 28, 32, 42, DateTimeKind.Local).AddTicks(2797),
+                            Id = new Guid("70720dea-b4c1-4d49-bd40-fe9016b18d03"),
+                            Created = new DateTime(2021, 1, 5, 17, 5, 54, 641, DateTimeKind.Local).AddTicks(9292),
                             Description = "Triggered when personel is updated.",
                             DisplayName = "Person Updated",
                             Name = "person.updated"
                         },
                         new
                         {
-                            Id = new Guid("e95c84d1-bde4-455e-934c-23203a9085db"),
-                            Created = new DateTime(2021, 1, 5, 16, 28, 32, 42, DateTimeKind.Local).AddTicks(2810),
+                            Id = new Guid("62a76f04-146a-419f-a785-71fc3e36ca8e"),
+                            Created = new DateTime(2021, 1, 5, 17, 5, 54, 641, DateTimeKind.Local).AddTicks(9355),
                             Description = "Triggered when personel is deleted.",
                             DisplayName = "Person Deleted",
                             Name = "person.deleted"
@@ -155,23 +175,23 @@ namespace AspNetWebhookPublisher.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("495b762c-d088-47ab-a8f2-aa43c783fc39"),
-                            Created = new DateTime(2021, 1, 5, 16, 28, 32, 43, DateTimeKind.Local).AddTicks(3963),
-                            IsActive = true,
-                            PayloadUrl = "http://localhost:5040/webhook-form-data-test",
-                            Secret = "secret",
-                            WebhookSubscriptionContentTypeId = new Guid("bc71a96a-50fe-4da8-9b6c-4c3d648ba65f"),
-                            WebhookSubscriptionTypeId = new Guid("d8d11b47-a78f-40aa-adf9-8f0b7475e4e1")
-                        },
-                        new
-                        {
-                            Id = new Guid("c49cd2ef-89d0-4f31-b0c1-8d8d7f9a5fbb"),
-                            Created = new DateTime(2021, 1, 5, 16, 28, 32, 43, DateTimeKind.Local).AddTicks(4257),
+                            Id = new Guid("468caa56-538f-4317-a5c7-cadcda765212"),
+                            Created = new DateTime(2021, 1, 5, 17, 5, 54, 644, DateTimeKind.Local).AddTicks(8398),
                             IsActive = true,
                             PayloadUrl = "http://localhost:5040/webhook-json-data-test",
                             Secret = "secret",
-                            WebhookSubscriptionContentTypeId = new Guid("4f8698fa-fd8f-487f-82d2-2887754fa9fd"),
-                            WebhookSubscriptionTypeId = new Guid("d8d11b47-a78f-40aa-adf9-8f0b7475e4e1")
+                            WebhookSubscriptionContentTypeId = new Guid("4ad91b1a-4009-4620-a4b7-a17746e7bbf2"),
+                            WebhookSubscriptionTypeId = new Guid("47d861e3-9042-4b65-b029-a5d07672abab")
+                        },
+                        new
+                        {
+                            Id = new Guid("3e93f47a-a422-4084-870c-667dc7196520"),
+                            Created = new DateTime(2021, 1, 5, 17, 5, 54, 644, DateTimeKind.Local).AddTicks(9157),
+                            IsActive = true,
+                            PayloadUrl = "http://localhost:5040/webhook-form-data-test",
+                            Secret = "secret",
+                            WebhookSubscriptionContentTypeId = new Guid("845fe809-bacc-4aab-bdeb-6cb5e5b7292b"),
+                            WebhookSubscriptionTypeId = new Guid("47d861e3-9042-4b65-b029-a5d07672abab")
                         });
                 });
 
@@ -218,14 +238,14 @@ namespace AspNetWebhookPublisher.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("bc71a96a-50fe-4da8-9b6c-4c3d648ba65f"),
-                            Created = new DateTime(2021, 1, 5, 16, 28, 32, 43, DateTimeKind.Local).AddTicks(927),
+                            Id = new Guid("4ad91b1a-4009-4620-a4b7-a17746e7bbf2"),
+                            Created = new DateTime(2021, 1, 5, 17, 5, 54, 644, DateTimeKind.Local).AddTicks(444),
                             Name = "application/json"
                         },
                         new
                         {
-                            Id = new Guid("4f8698fa-fd8f-487f-82d2-2887754fa9fd"),
-                            Created = new DateTime(2021, 1, 5, 16, 28, 32, 43, DateTimeKind.Local).AddTicks(937),
+                            Id = new Guid("845fe809-bacc-4aab-bdeb-6cb5e5b7292b"),
+                            Created = new DateTime(2021, 1, 5, 17, 5, 54, 644, DateTimeKind.Local).AddTicks(470),
                             Name = "application/x-www-form-urlencoded"
                         });
                 });
@@ -249,14 +269,14 @@ namespace AspNetWebhookPublisher.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d8d11b47-a78f-40aa-adf9-8f0b7475e4e1"),
-                            Created = new DateTime(2021, 1, 5, 16, 28, 32, 43, DateTimeKind.Local).AddTicks(1800),
+                            Id = new Guid("47d861e3-9042-4b65-b029-a5d07672abab"),
+                            Created = new DateTime(2021, 1, 5, 17, 5, 54, 644, DateTimeKind.Local).AddTicks(2762),
                             Name = "All"
                         },
                         new
                         {
-                            Id = new Guid("8a684a84-fd72-47b2-ac97-20713b8d1c64"),
-                            Created = new DateTime(2021, 1, 5, 16, 28, 32, 43, DateTimeKind.Local).AddTicks(1816),
+                            Id = new Guid("0c26be7d-8053-49e2-a590-ea991c1ae24a"),
+                            Created = new DateTime(2021, 1, 5, 17, 5, 54, 644, DateTimeKind.Local).AddTicks(2781),
                             Name = "Specific"
                         });
                 });

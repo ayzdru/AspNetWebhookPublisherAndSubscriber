@@ -8,6 +8,20 @@ namespace AspNetWebhookPublisher.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Persons",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Persons", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "WebhookEvents",
                 columns: table => new
                 {
@@ -150,9 +164,9 @@ namespace AspNetWebhookPublisher.Data.Migrations
                 columns: new[] { "Id", "Created", "Description", "DisplayName", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("d2207623-81c1-4964-ab7a-0d47d1f0b1c6"), new DateTime(2021, 1, 5, 16, 28, 32, 41, DateTimeKind.Local).AddTicks(6621), "Triggered when personel is created.", "Person Created", "person.created" },
-                    { new Guid("6fdc0abb-847d-4ebd-b4b1-7ec6cbf07fe5"), new DateTime(2021, 1, 5, 16, 28, 32, 42, DateTimeKind.Local).AddTicks(2797), "Triggered when personel is updated.", "Person Updated", "person.updated" },
-                    { new Guid("e95c84d1-bde4-455e-934c-23203a9085db"), new DateTime(2021, 1, 5, 16, 28, 32, 42, DateTimeKind.Local).AddTicks(2810), "Triggered when personel is deleted.", "Person Deleted", "person.deleted" }
+                    { new Guid("3c358c09-d38b-4e8c-86b5-8597fee1a7e0"), new DateTime(2021, 1, 5, 17, 5, 54, 640, DateTimeKind.Local).AddTicks(2480), "Triggered when personel is created.", "Person Created", "person.created" },
+                    { new Guid("70720dea-b4c1-4d49-bd40-fe9016b18d03"), new DateTime(2021, 1, 5, 17, 5, 54, 641, DateTimeKind.Local).AddTicks(9292), "Triggered when personel is updated.", "Person Updated", "person.updated" },
+                    { new Guid("62a76f04-146a-419f-a785-71fc3e36ca8e"), new DateTime(2021, 1, 5, 17, 5, 54, 641, DateTimeKind.Local).AddTicks(9355), "Triggered when personel is deleted.", "Person Deleted", "person.deleted" }
                 });
 
             migrationBuilder.InsertData(
@@ -160,8 +174,8 @@ namespace AspNetWebhookPublisher.Data.Migrations
                 columns: new[] { "Id", "Created", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("bc71a96a-50fe-4da8-9b6c-4c3d648ba65f"), new DateTime(2021, 1, 5, 16, 28, 32, 43, DateTimeKind.Local).AddTicks(927), "application/json" },
-                    { new Guid("4f8698fa-fd8f-487f-82d2-2887754fa9fd"), new DateTime(2021, 1, 5, 16, 28, 32, 43, DateTimeKind.Local).AddTicks(937), "application/x-www-form-urlencoded" }
+                    { new Guid("4ad91b1a-4009-4620-a4b7-a17746e7bbf2"), new DateTime(2021, 1, 5, 17, 5, 54, 644, DateTimeKind.Local).AddTicks(444), "application/json" },
+                    { new Guid("845fe809-bacc-4aab-bdeb-6cb5e5b7292b"), new DateTime(2021, 1, 5, 17, 5, 54, 644, DateTimeKind.Local).AddTicks(470), "application/x-www-form-urlencoded" }
                 });
 
             migrationBuilder.InsertData(
@@ -169,19 +183,19 @@ namespace AspNetWebhookPublisher.Data.Migrations
                 columns: new[] { "Id", "Created", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("d8d11b47-a78f-40aa-adf9-8f0b7475e4e1"), new DateTime(2021, 1, 5, 16, 28, 32, 43, DateTimeKind.Local).AddTicks(1800), "All" },
-                    { new Guid("8a684a84-fd72-47b2-ac97-20713b8d1c64"), new DateTime(2021, 1, 5, 16, 28, 32, 43, DateTimeKind.Local).AddTicks(1816), "Specific" }
+                    { new Guid("47d861e3-9042-4b65-b029-a5d07672abab"), new DateTime(2021, 1, 5, 17, 5, 54, 644, DateTimeKind.Local).AddTicks(2762), "All" },
+                    { new Guid("0c26be7d-8053-49e2-a590-ea991c1ae24a"), new DateTime(2021, 1, 5, 17, 5, 54, 644, DateTimeKind.Local).AddTicks(2781), "Specific" }
                 });
 
             migrationBuilder.InsertData(
                 table: "WebhookSubscriptions",
                 columns: new[] { "Id", "Created", "IsActive", "PayloadUrl", "Secret", "WebhookSubscriptionContentTypeId", "WebhookSubscriptionTypeId" },
-                values: new object[] { new Guid("495b762c-d088-47ab-a8f2-aa43c783fc39"), new DateTime(2021, 1, 5, 16, 28, 32, 43, DateTimeKind.Local).AddTicks(3963), true, "http://localhost:5040/webhook-form-data-test", "secret", new Guid("bc71a96a-50fe-4da8-9b6c-4c3d648ba65f"), new Guid("d8d11b47-a78f-40aa-adf9-8f0b7475e4e1") });
+                values: new object[] { new Guid("468caa56-538f-4317-a5c7-cadcda765212"), new DateTime(2021, 1, 5, 17, 5, 54, 644, DateTimeKind.Local).AddTicks(8398), true, "http://localhost:5040/webhook-json-data-test", "secret", new Guid("4ad91b1a-4009-4620-a4b7-a17746e7bbf2"), new Guid("47d861e3-9042-4b65-b029-a5d07672abab") });
 
             migrationBuilder.InsertData(
                 table: "WebhookSubscriptions",
                 columns: new[] { "Id", "Created", "IsActive", "PayloadUrl", "Secret", "WebhookSubscriptionContentTypeId", "WebhookSubscriptionTypeId" },
-                values: new object[] { new Guid("c49cd2ef-89d0-4f31-b0c1-8d8d7f9a5fbb"), new DateTime(2021, 1, 5, 16, 28, 32, 43, DateTimeKind.Local).AddTicks(4257), true, "http://localhost:5040/webhook-json-data-test", "secret", new Guid("4f8698fa-fd8f-487f-82d2-2887754fa9fd"), new Guid("d8d11b47-a78f-40aa-adf9-8f0b7475e4e1") });
+                values: new object[] { new Guid("3e93f47a-a422-4084-870c-667dc7196520"), new DateTime(2021, 1, 5, 17, 5, 54, 644, DateTimeKind.Local).AddTicks(9157), true, "http://localhost:5040/webhook-form-data-test", "secret", new Guid("845fe809-bacc-4aab-bdeb-6cb5e5b7292b"), new Guid("47d861e3-9042-4b65-b029-a5d07672abab") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_WebhookPayloads_WebhookEventId",
@@ -216,6 +230,9 @@ namespace AspNetWebhookPublisher.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Persons");
+
             migrationBuilder.DropTable(
                 name: "WebhookResponses");
 
