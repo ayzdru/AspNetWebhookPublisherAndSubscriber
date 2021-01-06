@@ -3,7 +3,6 @@ using AspNetWebhookPublisher.Entities;
 using AspNetWebhookPublisher.Enums;
 using AspNetWebhookPublisher.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Polly;
 using System;
 using System.Collections.Generic;
@@ -15,10 +14,11 @@ using System.Net.Http.Json;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace AspNetWebhookPublisher.Services
-{
+{    
     public class WebhookPublisher : IWebhookPublisher
     {
         protected const string SignatureHeaderKey = "sha256";
@@ -30,7 +30,7 @@ namespace AspNetWebhookPublisher.Services
         public WebhookPublisher(HttpClient httpClient, ApplicationDbContext applicationDbContext)
         {
             _httpClient = httpClient;
-            _httpClient.Timeout = TimeSpan.FromSeconds(5);
+            _httpClient.Timeout = TimeSpan.FromSeconds(30);
             _applicationDbContext = applicationDbContext;
         }
         private string GetDisplayName(WebHookEvents webHookEvent)
@@ -44,13 +44,30 @@ namespace AspNetWebhookPublisher.Services
         }
         public async Task Publish<T>(WebHookEvents webhookEvent, T data)
         {
-            try
+            var webhookEventName = GetDisplayName(webhookEvent);
+            var dataJson = JsonSerializer.Serialize(data);
+            var maxRetryAttempts = 3;
+            var pauseBetweenFailures = TimeSpan.FromSeconds(2);
+            var circuitBreakerPolicy = Policy.Handle<Exception>().CircuitBreakerAsync(5, TimeSpan.FromSeconds(30));
+            System.Diagnostics.Debug.WriteLine("STARTING...");
+            var retryPolicy = Policy
+                .Handle<Exception>()
+                .WaitAndRetryAsync(maxRetryAttempts, i => pauseBetweenFailures,
+onRetry: (response, delay, retryCount, context) =>
+{
+    System.Diagnostics.Debug.WriteLine("RETRYING... - " + retryCount);
+});
+            var webhookSubscriptions = _applicationDbContext.WebhookSubscriptions.Include(q => q.WebhookSubscriptionContentType).Where(q => q.IsActive == true && q.WebhookSubscriptionType.Name == WebhookSubscriptionTypes.All.ToString() || (q.WebhookSubscriptionAllowedEvents.Where(q => q.WebhookEvent.Name == webhookEventName).Any() == true)).ToList();
+            foreach (var webhookSubscription in webhookSubscriptions)
             {
-                var webhookEventName = GetDisplayName(webhookEvent);
-                var dataJson = JsonConvert.SerializeObject(data);
-                var webhookSubscriptions = _applicationDbContext.WebhookSubscriptions.Include(q=> q.WebhookSubscriptionContentType).Where(q => q.IsActive == true && q.WebhookSubscriptionType.Name == WebhookSubscriptionTypes.All.ToString() || (q.WebhookSubscriptionAllowedEvents.Where(q => q.WebhookEvent.Name == webhookEventName).Any() == true)).ToList();
-                foreach (var webhookSubscription in webhookSubscriptions)
+                try
                 {
+                    var options = new JsonSerializerOptions
+                    {
+                        WriteIndented = true,
+                        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                    };
+                    var hashJson = JsonSerializer.Serialize(new { Data = dataJson, Event = webhookEventName }, options);
                     var webhookEventEntity = _applicationDbContext.WebhookEvents.Where(q => q.Name == webhookEventName).SingleOrDefault();
                     if (webhookEventEntity != null)
                     {
@@ -61,7 +78,7 @@ namespace AspNetWebhookPublisher.Services
                         HttpContent httpContent = null;
                         if (webhookSubscription.WebhookSubscriptionContentType.Name == "application/json")
                         {
-                            httpContent = new StringContent(dataJson, Encoding.UTF8, "application/json");
+                            httpContent = new StringContent(hashJson, Encoding.UTF8, "application/json");
                         }
                         else
                         {
@@ -73,22 +90,12 @@ namespace AspNetWebhookPublisher.Services
 
                         using (var hasher = new HMACSHA256(secretBytes))
                         {
-                            var hashData = Encoding.UTF8.GetBytes(dataJson);
+                            var hashData = Encoding.UTF8.GetBytes(hashJson);
                             var sha256 = hasher.ComputeHash(hashData);
                             var headerValue = string.Format(CultureInfo.InvariantCulture, SignatureHeaderValueTemplate, BitConverter.ToString(sha256));
                             httpContent.Headers.Add(SignatureHeaderName, headerValue);
                         }
-                        var maxRetryAttempts = 3;
-                        var pauseBetweenFailures = TimeSpan.FromSeconds(2);
-                        var circuitBreakerPolicy = Policy.Handle<Exception>().CircuitBreakerAsync(5, TimeSpan.FromSeconds(30));
-                        System.Diagnostics.Debug.WriteLine("STARTING...");
-                        var retryPolicy = Policy
-                            .Handle<Exception>()
-                            .WaitAndRetryAsync(maxRetryAttempts, i => pauseBetweenFailures,
-  onRetry: (response, delay, retryCount, context) =>
-  {
-      System.Diagnostics.Debug.WriteLine("RETRYING... - " + retryCount);
-  });
+
 
                         await retryPolicy.WrapAsync(circuitBreakerPolicy).ExecuteAsync(async () =>
                         {
@@ -107,17 +114,15 @@ namespace AspNetWebhookPublisher.Services
                             }
                             response.EnsureSuccessStatusCode();
                         });
-                        
-                        
+
+
                     }
                 }
-            }
-            catch (Exception ex)
-            {
+                catch (Exception ex)
+                {
 
-              
+                }
             }
-           
         }
     }
 }

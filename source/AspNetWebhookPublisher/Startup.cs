@@ -37,7 +37,7 @@ namespace AspNetWebhookPublisher
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
-            services.AddHttpClient<IWebhookPublisher, WebhookPublisher>(q => q.Timeout = TimeSpan.FromSeconds(5));
+            services.AddHttpClient<IWebhookPublisher, WebhookPublisher>();
             services.AddScoped<IWebhookPublisher, WebhookPublisher>();
         }
 
